@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+    <title>Chat Bot</title>
+    <style>
+        body {
+            color: #333;
+            background-color: #efefef;
+            font: 13px helvetica,arial,freesans,clean,sans-serif;
+        }
+        #demo {
+            /*background-color: #ffffff;*/
+            width: 80%;
+            max-width: 1000px;
+            margin-left: auto;
+            margin-right: auto;
+            padding: 20px;
+
+            background-color: #F8F8F8;
+            border: 1px solid #ccc;
+            box-shadow: 0 0 10px #999;
+            line-height: 1.4em;
+            font: 13px helvetica,arial,freesans,clean,sans-serif;
+            color: black;
+        }
+        #demo input {
+            padding: 8px;
+            font-size: 14px;
+            border: 1px solid #ddd;
+            width: 400px;
+        }
+        .button {
+            display: inline-block;
+            background-color: darkcyan;
+            color: #fff;
+            padding: 8px;
+            cursor: pointer;
+            float: right;
+        }
+        #chatBotCommandDescription {
+            display: none;
+            margin-bottom: 20px;
+        }
+        input:focus {
+            outline: none;
+        }
+        .chatBotChatEntry {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+<script src="../js/chatbot.js"></script>
+<link rel="stylesheet" type="text/css" href="../css/chatbot.css" />
+<link rel = "stylesheet" type = "text/css" href = "../css/style.css" />
+
+<div id="demo" class = "chat-main">
+    <div id="chatBotCommandDescription"></div>
+    <input id="humanInput" type="text" placeholder="Say something" />
+	<div class="button" onclick="if (!ChatBot.playConversation(sampleConversation,4000)) {alert('conversation already running');};">Play sample conversation!</div>
+	<div class="button" onclick="$('#chatBotCommandDescription').slideToggle();" style="margin-right:10px">What can I say?</div>
+	<div class="col-md-12 chats border">
+		<div style="clear: both;">&nbsp;</div>
+		<div id="chatBot">
+			<div id="chatBotThinkingIndicator"></div>
+			<div id="chatBotHistory"></div>
+		</div>
+	</div>
+</div>
+
+
+<script>
+    var sampleConversation = [
+        "Hi",
+        "My name is Fry",
+        "Where is China?",
+        "What is the population of China?",
+        "Bye"
+    ];
+    var config = {
+        botName: 'Chat Bot',
+        inputs: '#humanInput',
+        inputCapabilityListing: true,
+        engines: [ChatBot.Engines.duckduckgo()],
+        addChatEntryCallback: function(entryDiv, text, origin) {
+            entryDiv.delay(200).slideDown();
+        }
+    };
+    ChatBot.init(config);
+    ChatBot.setBotName("Chat Bot");
+    ChatBot.addPattern("^hi$", "response", "Hi, Sir. How may I help you?", undefined, "Say 'Hi' to be greeted back.");
+    ChatBot.addPattern("^bye$", "response", "See you later, Sir.", undefined, "Say 'Bye' to end the conversation.");
+    ChatBot.addPattern("(?:my name is|I'm|I am) (.*)", "response", "hi $1, thanks for talking to me today", function (matches) {
+        ChatBot.setHumanName(matches[1]);
+    },"Say 'My name is [your name]' or 'I am [name]' to be called that by the bot");
+    ChatBot.addPattern("(what is the )?meaning of life", "response", "42", undefined, "Say 'What is the meaning of life' to get the answer.");
+    ChatBot.addPattern("(?:Comapany's name|company name|Company name|company's name)", "response","Sustainable Alchemists.",undefined, "Say What is 'company name' to get company's name.");
+	ChatBot.addPattern("(?:Company's Founder|company founder)", "response", "Full Metal Alchemist", undefined, "Say Who is the 'company founder' to get company founder's name.");
+	ChatBot.addPattern("(?:abstarct|Abstract)", "response", "Sustainable Alchemist Enterprises is a social venture focused on providing the requisite help to all change makers who are trying to do social and sustainable development.\nThe organisation started as a design thinking project at IMT Ghaziabad, focused on understanding the major barriers in development and after understanding the reasons, we now aim to counter the limited actions and create more possibilities in the field of social and sustainable development.\nn order to achieve our goal to improve the nation’s sustainable development, we explored different technologies and finally have created a holistic platform for promoting SSR (Sustainability and Social Responsibility) ecosystem which serves all the involved stakeholders.\nRegistered in June 2019, Sustainable Alchemist Enterprise is currently led by Mr. Tathagata Banerjee, an alumnus from IMT Ghaziabad and IESEG Paris."
+	, undefined, "Say 'abstract' to get Abstract View of the company.");
+	ChatBot.addPattern("(?:courses provided|Courses|courses|available courses)", "response", "There are currently 3 courses are running. They are SOLID WASTE MANAGEMENT FRAMEWORK IN URBAN CITIES OF INDIA, TRAGEDY OF COMMONS, PERSONAL GROWTH.", undefined, "Say 'available courses' to get the current available corses in the website.");
+	
+
+</script>
+</body>
+</html>
